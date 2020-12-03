@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=0">
+    <title>Pick teams</title>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+    <script src="https://cdn.jsdelivr.net/npm/vue@2/dist/vue.js"></script>
+
+</head>
+<body>
+    <div class="container">
+        <div id="app">
+            <div class="mt-5"></div>
+            <h3>Entrant lists</h3>
+            <div class="row">
+                <div class="col-12">
+                    <div class="list-group">
+                        <div class="list-group-item active">Entrant name</div>
+                        <ul class="list-group" v-for="n in names" :key="n">
+                            <li class="list-group-item">{{ n }}</li>
+                        </ul>
+                    </div>
+                </div>
+                <div class="col-12">
+                    <div class="mb-3 mt-2 form-group">
+                        <p>Input Names of the entrants to be drawn randomly into each team</p>
+                        <input type="text" class="form-control mb-2" name="names" v-model="input">
+                        <button class="btn btn-primary" @click="addNames">Add</button>
+                    </div>
+                    <div class="">
+                        <button class="btn btn-primary" @click="randomise">Lucky Draw</button>
+                    </div>
+
+                </div>
+            </div>
+            <div class="mt-5"></div>
+            <h3>Results</h3>
+            <div class="row" v-if="result">
+                <div class="col-6">
+                    <div class="list-group-item" style="background-color: red;color:white">Team Red</div>
+                    <ul class="list-group" v-for="t in red" :key="t">
+                        <li class="list-group-item">{{ t }}</li>
+                    </ul>
+                </div>
+                <div class="col-6">
+                    <div class="list-group-item active">Team Blue</div>
+                    <ul class="list-group" v-for="b in blue">
+                        <li class="list-group-item">{{ b }}</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+    <script>
+        new Vue({
+            el:'#app',
+            data : {
+                names: [],
+                result: false,
+                input: '',
+                blue: '',
+                red: ''
+            },
+            methods: {
+                addNames: function (){
+                    this.names.push(this.input);
+                    this.input = '';
+                },
+
+                randomise: function (){
+                    let rand = this.shuffle(this.names);
+                      let half =  Math.ceil(rand.length/2);
+                      this.blue = rand.slice(0, half);
+                      this.red = rand.slice(-half);
+                      this.result = true;
+                },
+                shuffle: function (a){
+                    for (let i = a.length - 1; i > 0; i--) {
+                        const j = Math.floor(Math.random() * (i + 1));
+                        [a[i], a[j]] = [a[j], a[i]];
+                    }
+                    return a;
+                }
+            }
+        })
+    </script>
+</body>
+</html>
